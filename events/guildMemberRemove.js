@@ -11,15 +11,15 @@ module.exports = async (client, member) => {
   const welcomeChannel = member.guild.channels.find(c => c.name === settings.welcomeChannel);
   if (!welcomeChannel) return;
 
-  const fromNow = moment(member.user.createdTimestamp).fromNow();
-  const isNew = (new Date() - member.user.createdTimestamp) < 43200000 ? "\n🆕 Account!" : "";
+  const fromNow = moment(member.joinedTimestamp).fromNow();
+  const isNew = (new Date() - member.joinedTimestamp) < 60000 ? "\nWell that was a short visit!" : "";
 
   const embed = new Discord.RichEmbed()
-    .setTitle("Member Joined")
+    .setTitle("Member Leave")
     .setAuthor(`${member.user.tag} (${member.user.id})`, member.user.displayAvatarURL)
     .setThumbnail(member.user.displayAvatarURL)
-    .setDescription(`**Account Created** : ${fromNow} ${isNew}`)
-    .setColor("#00d129")
+    .setDescription(`**Joined** : ${fromNow} ${isNew}`)
+    .setColor("BLURPLE")
     .setTimestamp();
   welcomeChannel.send(embed);
 };
