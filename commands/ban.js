@@ -8,15 +8,10 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
   }
   let target;
   try {
-    target = message.mentions.users.first() || client.users(args[0]) || await client.fetchUser(args[0]);
+    target = message.mentions.users.first() || client.users.get(args[0]) || await client.fetchUser(args[0]);
   } catch (e) { }
-
-  if (!target) {
-    try {
-      target = await client.fetchUser(args[0]);
-    } catch (e) { }
-  }
   if (!target) return m.edit("Could not locate member by ID or mention");
+  
   const member = message.guild.member(target);
   if (member) {
     if (!member.bannable || message.member.highestRole.position <= member.highestRole.position) {

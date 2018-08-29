@@ -8,13 +8,14 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
   }
   let target;
   try {
-    target = message.mentions.members.first() || message.guild.member(args[0]) || await message.guild.fetchMember(args[0]);
-  } catch (e) {
-    return m.edit("Could not locate member by ID or mention");
+    target = message.mentions.users.first() || client.users.get(args[0]) || await client.fetchUser(args[0]);
+  } catch (e) { }
+  const member = message.guild.member(target);
+  if (!target || !member) return m.edit("Could not locate member by ID or mention");
+  if (!member.kickable || message.member.highestRole.position <= member.highestRole.position) {
+    return m.edit(`Nice try ${message.author}, but you can't ban that user. Or I can't. One thing's for sure: they ain't banned, and now they know you tried. Right, ${target}?`);
   }
-  if (message.member.highestRole.position <= target.highestRole.position || !target.bannable) {
-    return m.edit(`Nice try ${message.author}, but you can't kick that user. Or I can't. One thing's for sure: they ain't banned, and now they know you tried. Right, ${target}?`);
-  }
+
   const reason = args.slice(1).join(" ") || "No reason provided";
   const key =`${message.guild.id}-${target.id}`;
   client.logs.ensure(key, []);
@@ -26,7 +27,7 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
       wasDMed = "Member could not be DMed before ban";
     });
   try {
-    await target.kick({reason, days});
+    await member.kick({reason});
     const embed = new Discord.RichEmbed()
       .setTitle("Member Kick")
       .setDescription(`**Action** : Kick\n**User** : ${target.tag} (${target.id})\n**Reason** : ${reason}\n${wasDMed}`)
