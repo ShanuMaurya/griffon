@@ -1,4 +1,4 @@
-const Discord = require("discord.js");
+const { RichEmbed : Embed } = require("discord.js");
 
 exports.run = async (client, message, args, level) => { // eslint-disable-line no-unused-vars
   const m = await message.channel.send("Unbanning User...");
@@ -22,7 +22,7 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
   client.logs.ensure(key, []);
   try {
     await message.guild.unban(target, reason);
-    const embed = new Discord.RichEmbed()
+    const embed = new Embed()
       .setTitle("User Unban")
       .setDescription(`**Action** : Unban\n**User** : ${target.tag} (${target.id})\n**Reason** : ${reason}`)
       .setThumbnail(target.displayAvatarURL)

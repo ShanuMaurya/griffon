@@ -1,6 +1,4 @@
-// The MESSAGE event runs anytime a message is received
-// Note that due to the binding of client to every event, every event
-// goes `client, other, args` when this function is run.
+const actions = require("../modules/modactions.js");
 
 module.exports = async (client, message) => {
   // It's good practice to ignore other bots. This also makes your bot ignore itself
@@ -10,6 +8,8 @@ module.exports = async (client, message) => {
   // Grab the settings for this server from Enmap.
   // If there is no guild, get default conf (DMs)
   const settings = message.settings = client.getGuildSettings(message.guild);
+
+  actions.checkMention(client, message);
 
   // Checks if the bot was mentioned, with no message after it, returns the prefix.
   const prefixMention = new RegExp(`^<@!?${client.user.id}>( |)$`);
