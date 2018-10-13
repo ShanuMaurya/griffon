@@ -1,4 +1,4 @@
-const Discord = require("discord.js");
+const { RichEmbed : Embed } = require("discord.js");
 
 exports.run = async (client, message, args, level) => { // eslint-disable-line no-unused-vars
   const m = await message.channel.send("Fetching History...");
@@ -6,10 +6,7 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
   if (!modChannel) {
     return m.edit(`Could not find #${message.settings.modLogChannel} channel. Please create it and try again`);
   }
-  let target;
-  try {
-    target = message.mentions.users.first() || client.users.get(args[0]) || await client.fetchUser(args[0]);
-  } catch (e) { console.log(e); }
+  let target = actions.getUser(message, args[0]);
 
   if (!target) target = message.author;
   await m.edit(`Fetching History for **${target.tag} (${target.id})** ...`);
@@ -24,7 +21,7 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
       actions[action.type]++;
     }
   });
-  const embed = new Discord.RichEmbed()
+  const embed = new Embed()
     .setThumbnail(target.displayAvatarURL)
     .setAuthor(`${target.tag} (${target.id})`, target.displayAvatarURL);
   let str = "";

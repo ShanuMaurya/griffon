@@ -1,4 +1,5 @@
-const Discord = require("discord.js");
+const { RichEmbed : Embed } = require("discord.js");
+const actions = require("../modules/modactions.js");
 
 exports.run = async (client, message, args, level) => { // eslint-disable-line no-unused-vars
   const m = await message.channel.send("Banning User...");
@@ -6,10 +7,7 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
   if (!modChannel) {
     return m.edit(`Could not find #${message.settings.modLogChannel} channel. Please create it and try again`);
   }
-  let target;
-  try {
-    target = message.mentions.users.first() || client.users.get(args[0]) || await client.fetchUser(args[0]);
-  } catch (e) { }
+  const target = actions.getUser(message, args[0]);
   if (!target) return m.edit("Could not locate member by ID or mention");
   
   const member = message.guild.member(target);
@@ -35,7 +33,8 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
     });
   try {
     await message.guild.ban(target.id, {reason, days});
-    const embed = new Discord.RichEmbed()
+
+    const embed = new Embed()
       .setTitle(soft ? "Member Softban" : "Member Ban")
       .setDescription(`**Action** : Ban\n**User** : ${target.tag} (${target.id})\n**Reason** : ${reason}\n${wasDMed}`)
       .setThumbnail(target.displayAvatarURL)
@@ -43,6 +42,7 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
       .setColor([255, 0, 0])
       .setTimestamp();
     const embedMessage = await modChannel.send(embed);
+
     client.logs.push(key, {
       type: soft ? "softban" : "ban", reason, timestamp: Date.now(), user: target.id, mod: message.author.id,
       channel: modChannel.id, message: embedMessage.id
