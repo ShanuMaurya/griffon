@@ -33,6 +33,7 @@ require("./modules/functions.js")(client);
 client.settings = new Enmap({ name: "settings", fetchAll: false, cloneLevel: "deep"});
 client.logs = new Enmap({name: "moderation"});
 client.rep = new Enmap({name: "reputation"});
+client.autoroles = new Enmap(); // {name: "autoroles"}
 client.cmdlog = new Enmap({name: "commandlog", fetchAll: false, autoFetch: false, cloneLevel: "deep"});
 
 // Aliases and commands are put in collections where they can be read from,

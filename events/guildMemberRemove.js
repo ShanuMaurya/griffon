@@ -1,25 +1,9 @@
-const Discord = require("discord.js");
-const moment = require("moment");
+const randomMessages = [
+  'Buh-bye ~~felicia~~ {user}!',
+  
+];
 
 module.exports = async (client, member) => {
-  // Load the guild's settings
-  const settings = client.getGuildSettings(member.guild);
-
-  // If welcome is off, don't proceed (don't welcome the user)
-  if (settings.welcomeEnabled !== "true") return;
-
-  const welcomeChannel = member.guild.channels.find(c => c.name === settings.welcomeChannel);
-  if (!welcomeChannel) return;
-
-  const fromNow = moment(member.joinedTimestamp).fromNow();
-  const isNew = (new Date() - member.joinedTimestamp) < 60000 ? "\nWell that was a short visit!" : "";
-
-  const embed = new Discord.RichEmbed()
-    .setTitle("Member Leave")
-    .setAuthor(`${member.user.tag} (${member.user.id})`, member.user.displayAvatarURL)
-    .setThumbnail(member.user.displayAvatarURL)
-    .setDescription(`**Joined** : ${fromNow} ${isNew}`)
-    .setColor("BLURPLE")
-    .setTimestamp();
-  welcomeChannel.send(embed);
+  const logChannel = member.guild.channels.get("318579723989155840");
+  logChannel.send(`Goodbye ${member.id}, you shall be missed!`);
 };

@@ -72,7 +72,7 @@ module.exports = async (client, message) => {
   client.cmdlog.set(autonum, {
     author: message.author.id,
     channel: message.channel.id,
-    guild: message.guild.id,
+    guild: message.guild ? message.guild.id : 'dm',
     name: cmd.help.name,
     timestamp: Date.now(),
     level,

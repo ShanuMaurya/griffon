@@ -2,10 +2,10 @@ const { RichEmbed : Embed } = require("discord.js");
 const slowmode = new Map();
 const ratelimit = 7500;
 
-exports.getUser = async (client, message, id) => {
+exports.getUser = async (message, id) => {
   let target;
   try {
-    target = message.mentions.users.first() || client.users.get(id) || await client.fetchUser(id);
+    target = message.mentions.users.first() || message.client.users.get(id) || await message.client.fetchUser(id);
   } catch (e) {
     // User doesn't exist
   }

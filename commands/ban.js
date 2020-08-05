@@ -7,15 +7,17 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
   if (!modChannel) {
     return m.edit(`Could not find #${message.settings.modLogChannel} channel. Please create it and try again`);
   }
-  const target = actions.getUser(message, args[0]);
+  const target = await actions.getUser(message, args[0]);
+  console.log(target);
   if (!target) return m.edit("Could not locate member by ID or mention");
   
-  const member = message.guild.member(target);
+  const member = await actions.getMember(message, target.id);
   if (member) {
     if (!member.bannable || message.member.highestRole.position <= member.highestRole.position) {
       return m.edit(`Nice try ${message.author}, but you can't ban that user. Or I can't. One thing's for sure: they ain't banned, and now they know you tried. Right, ${target}?`);
     }
   }
+  console.log(member);
 
   const soft = ["s", "soft"].some(flag => message.flags.includes(flag));
   const clear = ["c", "clear"].some(flag => message.flags.includes(flag));
@@ -25,7 +27,6 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
   client.logs.ensure(key, []);
   const days = (clear || soft) ? 7 : 0;
   let wasDMed;
-
 
   await target.send(`You've been banned from ${message.guild.name} by ${message.author.tag}, for: ${reason}.\nThere is currently no appeal system, so... kthxbai`)
     .catch(() => {
